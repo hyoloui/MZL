@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/native';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import {
   onSnapshot,
@@ -22,6 +22,7 @@ export default function Detail({
     params: { id },
   },
 }) {
+  console.log('id', id)
   const [category, setCategory] = useState('');
   const [posts, setPosts] = useState([]);
   const [word, setWord] = useState({});
@@ -36,12 +37,10 @@ export default function Detail({
     const snapshot = await getDoc(doc(dbService, 'Words', id));
     const data = snapshot.data(); // 가져온 doc의 객체 내용
     setWord(data);
-    console.log(snapshot.data());
   };
 
   useEffect(() => {
     getWord();
-    return (word.isEdit = false);
   }, []);
 
   // 누르면 isEdit이 true/false로 변경됨
@@ -62,6 +61,24 @@ export default function Detail({
     });
     getWord();
   };
+
+  // 글삭제 
+  const delPost = async () => {
+    console.log('id', id)
+    Alert.alert("삭제", "정말로 삭제하시겠습니까?", [
+      { text: "cancel", style: "destructive" }, {
+        text: "OK, Delete it.",
+        onPress: async () => {
+          try {
+            await deleteDoc(doc(dbService, 'Words', id));
+            navigate("Home");
+          } catch (err) {
+            console.log("err:", err);
+          }
+        },
+      },
+    ]);
+  }
   // reset 사용해서 변경된 상세페이지로 가게끔 해야함.  reset을 안쓰면 뒤로기가 되는데 그러면 이상해짐
   console.log('editMean', editMean);
   console.log('editWord', editWord);
@@ -101,7 +118,7 @@ export default function Detail({
               <Btn onPress={editPost}>
                 <Text>등록</Text>
               </Btn>
-              <Btn onPress={() => {}}>
+              <Btn onPress={() => { }}>
                 <Text></Text>
               </Btn>
             </ButtonBox>
@@ -131,7 +148,9 @@ export default function Detail({
               <Btn onPress={setEdit}>
                 <Text>수정</Text>
               </Btn>
-              <Btn onPress={() => {}}>
+              <Btn onPress={() =>
+                delPost(word.id)
+              }>
                 <Text>삭제</Text>
               </Btn>
             </ButtonBox>
