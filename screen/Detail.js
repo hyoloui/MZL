@@ -59,7 +59,7 @@ export default function Detail({
   // 완료 누르면 글 수정 완료
   // 유효성검사 추가, tmi는 공란이여도 괜찮을 것 같아서 mean,word에만 적용
   const editPost = async () => {
-    if (editMean !== '' && editWord !== '') { 
+    if (editMean !== '' && editWord !== '') {
       await updateDoc(doc(dbService, 'Words', id), {
         mean: editMean,
         word: editWord,
@@ -72,6 +72,23 @@ export default function Detail({
     }
   };
 
+  // 글삭제 
+  const delPost = async () => {
+    console.log('id', id)
+    Alert.alert("삭제", "정말로 삭제하시겠습니까?", [
+      { text: "cancel", style: "destructive" }, {
+        text: "OK, Delete it.",
+        onPress: async () => {
+          try {
+            await deleteDoc(doc(dbService, 'Words', id));
+            navigate("Home");
+          } catch (err) {
+            console.log("err:", err);
+          }
+        },
+      },
+    ]);
+  }
   // 유효성검사 에러메세지 출력을 위해 변수 생성
   const errCheck = editMean === '' || editWord === '';
 
@@ -114,7 +131,7 @@ export default function Detail({
               <Btn onPress={editPost}>
                 <Text>등록</Text>
               </Btn>
-              <Btn onPress={() => {}}>
+              <Btn onPress={() => { }}>
                 <Text></Text>
               </Btn>
             </ButtonBox>
@@ -140,14 +157,16 @@ export default function Detail({
                 <Text>{word.tmi}</Text>
               </TextBox>
             </Section>
-              <ButtonBox>
-                {/* 로그인한 uid와 글의 uid가 동일해야지만 수정,삭제버튼이 보임 */}
+            <ButtonBox>
+              {/* 로그인한 uid와 글의 uid가 동일해야지만 수정,삭제버튼이 보임 */}
               {uid === word.userid ? (
                 <>
                   <Btn onPress={setEdit}>
                     <Text>수정</Text>
                   </Btn>
-                  <Btn onPress={() => {}}>
+                  <Btn onPress={() =>
+                    delPost(word.id)
+                  }>
                     <Text>삭제</Text>
                   </Btn>
                 </>
