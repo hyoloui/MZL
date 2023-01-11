@@ -75,7 +75,7 @@ export default function Detail({
   // 글삭제 
   const delPost = async () => {
     console.log('id', id)
-    Alert.alert("삭제", "정말로 삭제하시겠습니까?", [
+    Alert.alert("삭제", "정말로 삭제하시겠습니까??", [
       { text: "cancel", style: "destructive" }, {
         text: "OK, Delete it.",
         onPress: async () => {
