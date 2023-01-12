@@ -10,15 +10,16 @@ const year = today.getFullYear();
 const month = today.getMonth() + 1;
 const day = today.getDate();
 
-const base_date =
+export const base_date =
   year +
   ('00' + month.toString()).slice(-2) +
-  ('00' + day.toString()).slice(-2);
+  ('00' + day.toString()).slice(-2) -
+  1;
 
 const BASE_URL =
   'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst';
 
 export const getTemp = () =>
   fetch(
-    `${BASE_URL}?serviceKey=${ServiceKey}&pageNo=1&numOfRows=200&dataType=JSON&base_date=${base_date}&base_time=0500&nx=51&ny=38`,
+    `${BASE_URL}?serviceKey=${ServiceKey}&pageNo=1&numOfRows=519&dataType=JSON&base_date=${base_date}&base_time=0500&nx=51&ny=38`,
   ).then((res) => res.json());
